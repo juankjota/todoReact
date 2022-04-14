@@ -1,8 +1,10 @@
 import react from "react";
 import './CreateTodoButton.css';
 
-function CreateTodoButton(){
-    const handleClick = (e)=> alert('hola perola');
+function CreateTodoButton(props){
+    const handleClick = ()=> {
+        props.setOpenModal(prevState=>!prevState);
+    }
     return(
         <button className="CreateTodoButton"
             onClick={handleClick}

@@ -1,7 +1,8 @@
 
 // import './App.css';
-import react,{useState} from 'react';
+import react,{useState,useEffect} from 'react';
 import { AppUI } from './AppUI';
+import {TodoProvider} from '../../TodoContext/index'
 
 
 
@@ -12,84 +13,55 @@ import { AppUI } from './AppUI';
 // ]
 
 
-function useLocalStorage(itemName,initialValue){  
+// function useLocalStorage(itemName,initialValue){  
 
-  const localStorageItem = localStorage.getItem(itemName);
+//   const localStorageItem = localStorage.getItem(itemName);
 
-  let parsedItem;
+//   let parsedItem;
 
-  if(!localStorageItem){
-    localStorage.setItem(itemName,JSON.stringify(initialValue));
-    parsedItem = initialValue;
-  }else{
-    parsedItem = JSON.parse(localStorageItem);
-  }
+//   if(!localStorageItem){
+//     localStorage.setItem(itemName,JSON.stringify(initialValue));
+//     parsedItem = initialValue;
+//   }else{
+//     parsedItem = JSON.parse(localStorageItem);
+//   }
 
-  const [item,setItem] = useState(parsedItem);
+//   const [item,setItem] = useState(parsedItem);
 
-  const saveItem = (newItem)=>{
-    const stringifiedItem = JSON.stringify(newItem);
-    localStorage.setItem(itemName,stringifiedItem);
-    setItem(newItem);
-  }
+//   const saveItem = (newItem)=>{
+//     const stringifiedItem = JSON.stringify(newItem);
+//     localStorage.setItem(itemName,stringifiedItem);
+//     setItem(newItem);
+//   }
 
-  return [
-    item,
-    saveItem,
-  ];
+//   return [
+//     item,
+//     saveItem,
+//   ];
 
-}
+// }
+
+
+
+
 
 function App() {
 
 
-  const [todos,saveTodos] = useLocalStorage('TODOS_V1',[]);
-
-
   
-  const [searchValue,setSearchValue] = useState('');
 
-  const completedTodos = todos.filter(todo=>!!todo.completed).length;
-  const totalTodos = todos.length;
+  // console.log('Render antes del use effect');
 
-  let searchedTodos = [];
+  // useEffect(()=>{
+  //   console.log('use effect');
+  // },[])
 
-  if(!searchValue.length >=1){
-    searchedTodos = todos;
-  }else{
-    searchedTodos = todos.filter(todo => {
-      const todoText = todo.text.toLowerCase();
-      const searchText = searchValue.toLocaleLowerCase();
-      return todoText.includes(searchText);
-    })
-    
-  }
-
- 
-  const completeTodo = (text) =>{        
-    const todoIndex = todos.findIndex(todo => todo.text === text);    
-    const newTodos = [...todos];
-    newTodos[todoIndex].completed = true;    
-     saveTodos(newTodos);    
-  }
-
-  const deleteTodo = (text) =>{        
-    const todoIndex = todos.findIndex(todo => todo.text === text);    
-    const newTodos = [...todos];
-    newTodos.splice(todoIndex,1);    
-     saveTodos(newTodos);    
-  }
+  // console.log('Render despues del use effect');  
 
   return (
-    <AppUI
-      totalTodos={totalTodos}
-      completedTodos={completedTodos}
-      searchValue={searchValue}
-      setSearchValue={setSearchValue} 
-      searchedTodos={searchedTodos}
-      completeTodo={completeTodo}
-      deleteTodo={deleteTodo}   
-    />
+   <TodoProvider>
+     <AppUI />
+   </TodoProvider>
   );
 }
 
